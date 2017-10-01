@@ -30,9 +30,6 @@
 # get DIR the script is running from (by CD'ing in and running pwd
 wdir=$( cd $(dirname $BASH_SOURCE[0]) && pwd)
 
-# check for wifi capability
-if $wdir/wifi/check_wifi.sh; then WIFI=true; else WIFI=false; fi
-
 # check Internet conectivity against 
 echo "Testing Internet connection and name resolution..."
 if [ "$(curl -s http://www.msftncsi.com/ncsi.txt)" != "Microsoft NCSI" ]; then 
@@ -42,16 +39,23 @@ fi
 echo "...[pass] Internet connection works"
 
 # check for Raspbian Jessie
-echo "Testing if the system runs Raspbian Jessie or Stretch..."
-if ! (grep -q -E "Raspbian.*jessie" /etc/os-release || grep -q -E "Raspbian.*stretch" /etc/os-release) ; then
-        echo "...[Error] Pi is not running Raspbian Jessie or Stretch! Exiting ..."
+echo "Testing if the system runs compatible release..."
+if ! (grep -q -E "Raspbian.*jessie" /etc/os-release || grep -q -E "Raspbian.*stretch" /etc/os-release || grep -q -E "Kali" /etc/os-release) ; then
+        echo "...[Error] Pi is not running Raspbian Jessie/Stretch or Kali! Exiting ..."
         exit
 fi
+
 echo "...[pass] Pi seems to be running Raspbian Jessie or Stretch"
 if (grep -q -E "Raspbian.*stretch" /etc/os-release) ; then
 	STRETCH=true
 fi
 
+# check for Kali Linux
+echo "Testing if the system runs Kali..."
+if (grep -q -E "Kali" /etc/os-release) ; then
+        echo "Detected Kali"
+        KALI=true
+fi
 
 echo "Backing up resolv.conf"
 sudo cp /etc/resolv.conf /tmp/resolv.conf
@@ -59,15 +63,10 @@ sudo cp /etc/resolv.conf /tmp/resolv.conf
 echo "Installing needed packages..."
 sudo apt-get -y update
 sudo apt-get -y upgrade # include patched bluetooth stack
-#if $WIFI; then
-#	sudo apt-get install -y dnsmasq git python-pip python-dev screen sqlite3 inotify-tools hostapd
-#else
-#	sudo apt-get install -y dnsmasq git python-pip python-dev screen sqlite3 inotify-tools
-#fi
 
 # hostapd gets installed in even if WiFi isn't present (SD card could be moved from "Pi Zero" to "Pi Zero W" later on)
-sudo apt-get -y install dnsmasq git python-pip python-dev screen sqlite3 inotify-tools hostapd autossh bluez bluez-tools bridge-utils ethtool
-
+sudo apt-get -y install dnsmasq git python-pip python-dev screen sqlite3 inotify-tools \
+                        hostapd autossh bluez bluez-tools bridge-utils ethtool
 
 # not needed in production setup
 #sudo apt-get install -y tshark tcpdump
@@ -240,14 +239,16 @@ sudo sed -n -i -e '/^libcomposite/!p' -e '$alibcomposite' /etc/modules
 echo "Removing all former modules enabled in /boot/cmdline.txt..."
 sudo sed -i -e 's/modules-load=.*dwc2[',''_'a-zA-Z]*//' /boot/cmdline.txt
 
-echo "Installing kernel update ..."
 # still needed on current stretch releas, kernel 4.9.41+ ships still
 # with broken HID gadget module (installing still needs a cup of coffee)
 # Note:  last working Jessie version was the one with kernel 4.4.50+
 #        stretch kernel known working is 4.9.45+ (only available via update right now)
 
 # Raspbian stretch with Kernel >= 4.9.50+ needed for working bluetooth nap
-sudo rpi-update
+if $STRETCH ; then
+    echo "Installing kernel update ..."
+    sudo rpi-update
+fi
 
 echo "Generating keypair for use with AutoSSH..."
 source $wdir/setup.cfg
