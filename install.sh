@@ -30,7 +30,7 @@
 # get DIR the script is running from (by CD'ing in and running pwd
 wdir=$( cd $(dirname $BASH_SOURCE[0]) && pwd)
 
-sudo apt-get install -y curl mkdosfs
+sudo apt-get install -y curl dosfstools
 
 # check Internet conectivity against 
 echo "Testing Internet connection and name resolution..."
