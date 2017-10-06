@@ -42,7 +42,7 @@ source $wdir/boot/init_led.sh
 echo "P4wnP1: Loading config ..."
 source $wdir/boot/init_config.sh
 
-# Create bash script which could be altered from /home/pi/.profile
+# Create bash script which could be altered from /root/.profile
 touch /tmp/profile.sh
 echo "#!/bin/bash" >> /tmp/profile.sh
 echo "wdir=$wdir" >> /tmp/profile.sh

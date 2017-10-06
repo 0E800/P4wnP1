@@ -203,7 +203,7 @@ PartOf=bluetooth.service
 [Service]
 Type=forking
 RemainAfterExit=yes
-ExecStart=/bin/bash /home/pi/P4wnP1/boot/init_bt.sh
+ExecStart=/bin/bash /root/P4wnP1/boot/init_bt.sh
 StandardOutput=journal+console
 StandardError=journal+console
 
@@ -215,9 +215,9 @@ fi
 
 sudo systemctl enable P4wnP1-bt-nap.service
 
-if ! grep -q -E '^.+P4wnP1 STARTUP$' /home/pi/.profile; then
-	echo "Adding P4wnP1 startup script to /home/pi/.profile..."
-cat << EOF >> /home/pi/.profile
+if ! grep -q -E '^.+P4wnP1 STARTUP$' /root/.profile; then
+	echo "Adding P4wnP1 startup script to /root/.profile..."
+cat << EOF >> /root/.profile
 # P4wnP1 STARTUP
 source /tmp/profile.sh
 declare -f onLogin > /dev/null && onLogin
