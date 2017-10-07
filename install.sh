@@ -281,9 +281,9 @@ echo
 echo "If you're using a Pi Zero W, a WiFi AP should be opened. You could use the AP to setup P4wnP1, too."
 echo "          WiFi name:    P4wnP1"
 echo "          Key:          MaMe82-P4wnP1"
-echo "          SSH access:    pi@172.24.0.1 (password: raspberry)"
+echo "          SSH access:    root@172.24.0.1 (password: toor)"
 echo
-echo "  or via Bluetooth NAP:    pi@172.26.0.1 (password: raspberry)"
+echo "  or via Bluetooth NAP:    root@172.26.0.1 (password: toor)"
 echo
 echo "Go to your installation directory. From there you can alter the settings in the file 'setup.cfg',"
 echo "like payload and language selection"
