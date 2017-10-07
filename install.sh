@@ -133,11 +133,11 @@ else
 fi
 
 echo "Unpacking John the Ripper Jumbo edition..."
+cd john-1-8-0-jumbo_raspbian_jessie_precompiled/
+git fetch
+git checkout jtr_stretch
+cd ..
 if $STRETCH; then
-	cd john-1-8-0-jumbo_raspbian_jessie_precompiled/
-	git fetch
-	git checkout jtr_stretch
-	cd ..
 	tar zxf john-1-8-0-jumbo_raspbian_jessie_precompiled/john-1-8-0-jumbo_raspbian_stretch_precompiled.tar.gz
 else
 	tar xJf john-1-8-0-jumbo_raspbian_jessie_precompiled/john-1.8.0-jumbo-1_precompiled_raspbian_jessie.tar.xz
